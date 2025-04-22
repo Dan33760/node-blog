@@ -1,0 +1,105 @@
+  <%- include('includes/head', { title: "Index page" }) %>
+  
+ <!-- Sidebar -->
+ <aside class="w-64 bg-white shadow-md h-screen p-6 space-y-6">
+  <h2 class="text-2xl font-bold text-blue-600">MonDashboard</h2>
+  <nav class="space-y-4">
+    <a href="#" class="block text-gray-700 hover:text-blue-600">Tableau de bord</a>
+    <a href="#" class="block text-gray-700 hover:text-blue-600">Articles</a>
+    <a href="#" class="block text-gray-700 hover:text-blue-600">Catégories</a>
+    <a href="#" class="block text-gray-700 hover:text-blue-600">Utilisateurs</a>
+    <a href="#" class="block text-gray-700 hover:text-blue-600">Paramètres</a>
+  </nav>
+</aside>
+
+<div class="flex-1 flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-gray-800">Dashboard - Articles</h1>
+  </header>
+
+  <main class="flex-1 p-6 space-y-10">
+    <!-- Formulaire -->
+    <section class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4">Ajouter / Modifier un Article</h2>
+      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <input type="text" placeholder="Titre de l'article" class="border px-2 py-1 text-sm rounded w-full" />
+          <p class="text-xs text-red-500 mt-1">Ce champ est requis.</p>
+        </div>
+        <div>
+          <input type="text" placeholder="Auteur" class="border px-2 py-1 text-sm rounded w-full" />
+          <p class="text-xs text-red-500 mt-1">Ce champ est requis.</p>
+        </div>
+        <div>
+          <input type="date" class="border px-2 py-1 text-sm rounded w-full" />
+          <p class="text-xs text-red-500 mt-1">Date invalide.</p>
+        </div>
+        <div>
+          <select class="border px-2 py-1 text-sm rounded w-full">
+            <option selected disabled>Catégorie</option>
+            <option>Tech</option>
+            <option>Santé</option>
+            <option>Éducation</option>
+          </select>
+          <p class="text-xs text-red-500 mt-1">Veuillez sélectionner une catégorie.</p>
+        </div>
+        <div class="md:col-span-2">
+          <textarea placeholder="Contenu" class="border px-2 py-1 text-sm rounded w-full h-24"></textarea>
+          <p class="text-xs text-red-500 mt-1">Le contenu est requis.</p>
+        </div>
+        <div class="md:col-span-2">
+          <input type="file" class="w-full text-sm" />
+        </div>
+        <div class="md:col-span-2 flex justify-end">
+          <button class="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700">Soumettre</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Tableau des articles -->
+    <section class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4">Liste des Articles</h2>
+      <table class="min-w-full table-auto text-sm">
+        <thead>
+          <tr class="bg-gray-200 text-left">
+            <th class="p-2">ID</th>
+            <th class="p-2">Titre</th>
+            <th class="p-2">Auteur</th>
+            <th class="p-2">Date</th>
+            <th class="p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b hover:bg-gray-50">
+            <td class="p-2">1</td>
+            <td class="p-2">Article Exemple</td>
+            <td class="p-2">Jean Dupont</td>
+            <td class="p-2">2025-04-17</td>
+            <td class="p-2 space-x-1">
+              <button class="bg-green-500 text-white px-2 py-1 text-xs rounded">Afficher</button>
+              <button class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Modifier</button>
+              <button class="bg-red-600 text-white px-2 py-1 text-xs rounded">Supprimer</button>
+            </td>
+          </tr>
+          <!-- Autres lignes dynamiques ici -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+</div>
+
+<!-- Page de détail (exemple statique, à afficher dynamiquement) -->
+<div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="detailModal">
+<div class="bg-white p-6 rounded-2xl max-w-xl w-full">
+  <h2 class="text-xl font-bold mb-4">Détail de l'Article</h2>
+  <p><span class="font-semibold">Titre:</span> Article Exemple</p>
+  <p><span class="font-semibold">Auteur:</span> Jean Dupont</p>
+  <p><span class="font-semibold">Date:</span> 2025-04-17</p>
+  <p class="mt-2"><span class="font-semibold">Contenu:</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  <button onclick="document.getElementById('detailModal').classList.add('hidden')" class="mt-4 bg-gray-800 text-white px-4 py-2 rounded">Fermer</button>
+</div>
+  
+  
+  <%- include('includes/end') %>

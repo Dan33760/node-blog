@@ -1,0 +1,47 @@
+<%- include('../includes/head', { title: "Liste des categories" }) %>
+
+    <!-- Sidebar -->
+    <%- include('../includes/sidebar') %>
+
+
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white shadow p-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-gray-800"><%= editing ? 'Modifier' : 'Ajoute' %> - Categories </h1>
+            </header>
+
+            <main class="flex-1 p-6 space-y-10">
+
+                <!-- Formulaire -->
+                <section class="bg-white p-6 rounded-2xl shadow">
+                    <h2 class="text-lg font-semibold mb-4"><%= editing ? 'Modifier' : 'Ajouter' %> une Categorie</h2>
+                    <form action="/back/categories<%= editing ? '/update' : '/add' %>" method="post" class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
+                        <div class="md:col-span-1">
+                            <p class="text-sm font-semibold text-black-500 mt-1">Titre</p>
+                            <input type="text" name="title"
+                                class="border px-2 py-1 text-sm rounded w-full" />
+                            <% if(errorsMessage.find(e => e.path === 'title')) { %>
+                            <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'title').msg %></p>
+                            <% } %>
+                        </div>
+                        
+                        
+                        <div class="md:col-span-1">
+                            <p class="text-sm font-semibold text-black-500 mt-1">Description</p>
+                            <textarea placeholder="Contenu" name="content"
+                                class="border px-2 py-1 text-sm rounded w-full h-24"></textarea>
+                            <p class="text-xs text-red-500 mt-1">Le contenu est requis.</p>
+                        </div>
+                        <div class="md:col-span-1 flex justify-end">
+                            <button
+                                class="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700">Soumettre</button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+        </div>
+
+
+
+        <%- include('../includes/end') %>

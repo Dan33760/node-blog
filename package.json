@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon ./bin/www",
     "watch": "npx @tailwindcss/cli -i ./public/stylesheets/input.css -o ./public/stylesheets/output.css --watch"
   },
   "dependencies": {
@@ -12,10 +12,12 @@
     "debug": "~2.6.9",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "express-validator": "^7.2.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.14.0",
+    "nodemon": "^3.1.9",
     "sequelize": "^6.37.7",
     "tailwindcss": "^4.1.4"
   }

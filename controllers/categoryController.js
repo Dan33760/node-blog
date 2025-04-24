@@ -97,3 +97,25 @@ exports.postEditCategory = (req, res, next) => {
             return next(error);
         });
 }
+
+exports.deleteCatgory = (req, res, next) => {
+    const categorieId = req.params.categoryId;
+    Category.findByPk(categorieId)
+        .then(category => {
+            if(!category) {
+                let err = new Error('Category non trouver');
+                return next(err);
+            }
+            return category.destroy();
+        })
+        .then(result => {
+            console.log(result);
+            req.flash('message', 'Category Supprime');
+            res.redirect('/admin/categories')
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
+}

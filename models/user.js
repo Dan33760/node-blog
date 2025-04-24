@@ -37,7 +37,7 @@ module.exports = (sequelize) => {
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         email: {
             type: DataTypes.STRING,
@@ -50,7 +50,8 @@ module.exports = (sequelize) => {
         },
         role: {
             type: DataTypes.ENUM,
-            values: ['reader', 'editor', 'admin']
+            values: ['reader', 'editor', 'admin'],
+            defaultValue: 'editor'
         },
         avatar: {
             type: DataTypes.STRING

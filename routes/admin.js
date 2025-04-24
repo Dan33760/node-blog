@@ -5,8 +5,10 @@ const { body } = require('express-validator');
 const categoryController = require('../controllers/categoryController');
 
 /* GET users listing. */
-router.get('/dashboard', function(req, res, next) {
-  res.render('index');
+router.get('/', function(req, res, next) {
+  res.render('index', {
+	path: '/dashboard'
+  });
 });
 
 router.get('/categories', categoryController.getCategory);
@@ -31,6 +33,8 @@ router.post('/categories/edit', [
 	body('slug').isString().trim().notEmpty(),
 	body('categoryId').trim().notEmpty(),
 ],categoryController.postEditCategory);
+
+router.get('/categories/delete/:categoryId', categoryController.deleteCatgory);
 
 
 module.exports = router;

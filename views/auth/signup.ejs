@@ -4,18 +4,30 @@
     <div class="fixed inset-0 bg-gray-100 flex items-center justify-center z-50" id="registerPage">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
             <h2 class="text-xl font-bold mb-4 text-center">Créer un compte</h2>
-            <form class="space-y-4">
+            <form class="space-y-4" action="/auth/signup" method="post">
                 <div>
-                    <input type="text" placeholder="Nom complet" class="border px-3 py-2 rounded w-full text-sm" />
-                    <p class="text-xs text-red-500 mt-1">Nom requis</p>
+                    <label for="name" class="text-sm font-semibold text-black-500 mt-1">Nom</label>
+                    <input type="text" name="name" value="<%= oldUser.name %>"
+                        class="border px-3 py-2 rounded w-full text-sm" />
+                        <% if(errorsMessage.find(e => e.path === 'name')) { %>
+                            <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'name').msg %></p>
+                        <% } %>
                 </div>
                 <div>
-                    <input type="email" placeholder="Adresse e-mail" class="border px-3 py-2 rounded w-full text-sm" />
-                    <p class="text-xs text-red-500 mt-1">Email invalide</p>
+                    <label for="emaol" class="text-sm font-semibold text-black-500 mt-1">Email</label>
+                    <input type="email" name="email" value="<%= oldUser.email %>"
+                        class="border px-3 py-2 rounded w-full text-sm" />
+                        <% if(errorsMessage.find(e => e.path === 'email')) { %>
+                            <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'email').msg %></p>
+                        <% } %>
                 </div>
                 <div>
-                    <input type="password" placeholder="Mot de passe" class="border px-3 py-2 rounded w-full text-sm" />
-                    <p class="text-xs text-red-500 mt-1">Minimum 6 caractères</p>
+                    <label for="password" class="text-sm font-semibold text-black-500 mt-1">Mot de passe</label>
+                    <input type="password" name="password" value="<%= oldUser.password %>"
+                        class="border px-3 py-2 rounded w-full text-sm" />
+                        <% if(errorsMessage.find(e => e.path === 'password')) { %>
+                            <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'password').msg %></p>
+                        <% } %>
                 </div>
                 <button type="submit"
                     class="bg-green-600 text-white px-4 py-2 rounded w-full text-sm hover:bg-green-700">S'inscrire</button>

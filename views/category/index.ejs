@@ -7,7 +7,7 @@
     <div class="flex-1 flex flex-col relative">
         <!-- Notification -->
         <% if(message.length > 0) { %>
-            <div class="absolute top-2.5 right-5 rounded-xl px-[20px] py-[10px] bg-green-400">
+            <div id="alert" class="absolute top-2.5 right-5 rounded-xl px-[20px] py-[10px] bg-green-400">
                 <%= message[0] %>
             </div>
         <% } %>
@@ -46,16 +46,19 @@
                                     <td class="p-2"><%= category.title %></td>
                                     <td class="p-2"><%= category.slug %></td>
                                     <td class="p-2 space-x-1">
-                                        <a href="/admin/categories/edit/<%= category.id %>" class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Modifier</button>
-                                        <a href="#" onclick="document.getElementById('detailModal').classList.remove('hidden')"
+                                        <a href="/admin/categories/edit/<%= category.id %>"
+                                            class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Modifier</button>
+                                        <a href="/admin/categories/delete/<%= category.id %>"
                                             class="bg-red-600 text-white px-2 py-1 text-xs rounded">Supprimer</a>
+                                        <!-- <a href="#" onclick="document.getElementById('detailModal').classList.remove('hidden')"
+                                            class="bg-red-600 text-white px-2 py-1 text-xs rounded">Supprimer</a> -->
                                     </td>
                                 </tr>
                             <%
                                 }
                             } else { 
                             %>
-                                <div>Pas de produits Trouves</div>
+                                <tr><td>Pas de produits Trouves</td></tr>
                             <% } %>
                         </tbody>
                     </table>
@@ -65,7 +68,7 @@
         </div>
 
         <!-- Page de détail (exemple statique, à afficher dynamiquement) -->
-        <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="detailModal">
+        <!-- <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="detailModal">
             <div class="bg-white p-6 rounded-2xl max-w-xl w-full">
                 <h2 class="text-xl font-bold mb-4">Détail de l'Article</h2>
                 <p><span class="font-semibold">Titre:</span> Article Exemple</p>
@@ -75,7 +78,7 @@
                     adipiscing elit.</p>
                 <button onclick="document.getElementById('detailModal').classList.add('hidden')"
                     class="mt-4 bg-gray-800 text-white px-4 py-2 rounded">Fermer</button>
-            </div>
+            </div> -->
 
 
             <%- include('../includes/end') %>

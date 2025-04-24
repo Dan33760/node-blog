@@ -38,7 +38,9 @@ module.exports = (sequelize) => {
                 through: models.Like,
                 foreignKey: 'article_id',
                 otherKey: 'user_id',
-                as: 'likedBy'
+                as: 'likedBy',
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
             });
         }
     }

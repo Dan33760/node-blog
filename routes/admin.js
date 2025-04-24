@@ -10,13 +10,26 @@ router.get('/dashboard', function(req, res, next) {
 });
 
 router.get('/categories', categoryController.getCategory);
+
 router.get('/categories/add', categoryController.getAddCategory);
+
 router.post('/categories/add', [
 	body('title')
 		.trim()
 		.notEmpty()
 		.isLength({min: 3, max: 20}).withMessage('Le nombre de caracteres doit etre entre 3 et 20'),
-	body('content').isString().trim().notEmpty(),
+	body('slug').isString().trim().notEmpty(),
 ],categoryController.postAddCategory);
+
+router.get('/categories/edit/:categoryId', categoryController.getEditCategory);
+
+router.post('/categories/edit', [
+	body('title')
+		.trim()
+		.notEmpty()
+		.isLength({min: 3, max: 20}).withMessage('Le nombre de caracteres doit etre entre 3 et 20'),
+	body('slug').isString().trim().notEmpty(),
+],categoryController.postAddCategory);
+
 
 module.exports = router;

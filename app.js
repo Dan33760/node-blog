@@ -1,16 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
+const flash = require('connect-flash');
+
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authsRouter = require('./routes/auth');
-const backRouter = require('./routes/back');
+const adminRoutes = require('./routes/admin');
 const { sequelize } = require('./models');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,10 +25,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Configuration de la session
+app.use(session({
+    secret: 'danielsivyolokasereka',
+    resave: false,
+    saveUninitialized: false
+}));
+
+// configuration connect-flash
+app.use(flash());
+
+// Middleware pour mettre le message flash dans les variables de la vue
+app.use((req, res, next) => {
+    res.locals.message = req.flash('message');
+    next();
+});
+
+// Configuration des routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authsRouter);
-app.use('/back', backRouter);
+app.use('/admin', adminRoutes);
 
 // sequelize.sync({ force: true })
 //   .then(() => {

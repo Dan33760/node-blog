@@ -15,25 +15,31 @@
                 <!-- Formulaire -->
                 <section class="bg-white p-6 rounded-2xl shadow">
                     <h2 class="text-lg font-semibold mb-4"><%= editing ? 'Modifier' : 'Ajouter' %> une Categorie</h2>
-                    <form action="/back/categories<%= editing ? '/update' : '/add' %>" method="post" class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
+                    <form action="/admin/categories<%= editing ? '/edit' : '/add' %>" method="post" class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
                         <div class="md:col-span-1">
                             <p class="text-sm font-semibold text-black-500 mt-1">Titre</p>
                             <input type="text" name="title"
+                                value="<% if(editing) { %><%= category.title %><% } %>"
                                 class="border px-2 py-1 text-sm rounded w-full" />
                             <% if(errorsMessage.find(e => e.path === 'title')) { %>
                             <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'title').msg %></p>
                             <% } %>
                         </div>
-                        
-                        
                         <div class="md:col-span-1">
-                            <p class="text-sm font-semibold text-black-500 mt-1">Description</p>
-                            <textarea placeholder="Contenu" name="content"
-                                class="border px-2 py-1 text-sm rounded w-full h-24"></textarea>
-                            <p class="text-xs text-red-500 mt-1">Le contenu est requis.</p>
+                            <p class="text-sm font-semibold text-black-500 mt-1">Slug</p>
+                            <input type="text" name="slug"
+                                value="<% if(editing) { %><%= category.slug %><% } %>"
+                                class="border px-2 py-1 text-sm rounded w-full" />
+                            <% if(errorsMessage.find(e => e.path === 'slug')) { %>
+                            <p class="text-xs text-red-500 mt-1"><%= errorsMessage.find(e => e.path === 'slug').msg %></p>
+                            <% } %>
                         </div>
+                        <% if(editing) { %>
+                            <input type="hidden" name="categoryId" value="<%= category.id %>">
+                        <% } %>
+                    
                         <div class="md:col-span-1 flex justify-end">
-                            <button
+                            <button type="submit"
                                 class="bg-blue-600 text-white px-3 py-1 text-sm rounded hover:bg-blue-700">Soumettre</button>
                         </div>
                     </form>

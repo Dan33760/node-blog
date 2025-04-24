@@ -1,63 +1,81 @@
 <%- include('../includes/head', { title: "Liste des categories" }) %>
 
-<!-- Sidebar -->
-<%- include('../includes/sidebar') %>
+    <!-- Sidebar -->
+    <%- include('../includes/sidebar') %>
 
+    
+    <div class="flex-1 flex flex-col relative">
+        <!-- Notification -->
+        <% if(message.length > 0) { %>
+            <div class="absolute top-2.5 right-5 rounded-xl px-[20px] py-[10px] bg-green-400">
+                <%= message[0] %>
+            </div>
+        <% } %>
+            <!-- Header -->
+            <header class="bg-white shadow p-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-gray-800">Dashboard - Categories</h1>
+            </header>
 
-<div class="flex-1 flex flex-col">
- <!-- Header -->
- <header class="bg-white shadow p-4 flex justify-between items-center">
-   <h1 class="text-xl font-bold text-gray-800">Dashboard - Categories</h1>
- </header>
+            <main class="flex-1 p-6 space-y-10">
 
- <main class="flex-1 p-6 space-y-10">
-   
-   <!-- Tableau des articles -->
-   <section class="bg-white p-6 rounded-2xl shadow">
-     <div class="flex justify-between">
-        <h2 class="text-lg font-semibold mb-4">Liste des Categories</h2>
-        <div>
-            <a href="/back/categories/add" class="bg-blue-500 text-white px-2 py-1 text-xs rounded">Ajouter</a>
+                <!-- Tableau des articles -->
+                <section class="bg-white p-6 rounded-2xl shadow">
+                    <div class="flex justify-between">
+                        <h2 class="text-lg font-semibold mb-4">Liste des Categories</h2>
+                        <div>
+                            <a href="/admin/categories/add"
+                                class="bg-blue-500 text-white px-2 py-1 text-xs rounded">Ajouter</a>
+                        </div>
+                    </div>
+                    <table class="min-w-full table-auto text-sm">
+                        <thead>
+                            <tr class="bg-gray-200 text-left">
+                                <th class="p-2"><input type="checkbox"></th>
+                                <th class="p-2">Titre</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% 
+                            if(categories.length) {
+                                for(let category of categories) {
+                            %>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-2"><input class="item" type="checkbox"></td>
+                                    <td class="p-2"><%= category.title %></td>
+                                    <td class="p-2"><%= category.slug %></td>
+                                    <td class="p-2 space-x-1">
+                                        <a href="/admin/categories/edit/<%= category.id %>" class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Modifier</button>
+                                        <a href="#" onclick="document.getElementById('detailModal').classList.remove('hidden')"
+                                            class="bg-red-600 text-white px-2 py-1 text-xs rounded">Supprimer</a>
+                                    </td>
+                                </tr>
+                            <%
+                                }
+                            } else { 
+                            %>
+                                <div>Pas de produits Trouves</div>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
         </div>
-     </div>
-     <table class="min-w-full table-auto text-sm">
-       <thead>
-         <tr class="bg-gray-200 text-left">
-           <th class="p-2">N°</th>
-           <th class="p-2">Titre</th>
-           <th class="p-2">Description</th>
-           <th class="p-2">Actions</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr class="border-b hover:bg-gray-50">
-           <td class="p-2">1</td>
-           <td class="p-2">Article Exemple</td>
-           <td class="p-2">Jean Dupont</td>
-           <td class="p-2 space-x-1">
-             <button class="bg-green-500 text-white px-2 py-1 text-xs rounded">Afficher</button>
-             <button class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Modifier</button>
-             <button onclick="document.getElementById('detailModal').classList.remove('hidden')" class="bg-red-600 text-white px-2 py-1 text-xs rounded">Supprimer</button>
-           </td>
-         </tr>
-         <!-- Autres lignes dynamiques ici -->
-       </tbody>
-     </table>
-   </section>
- </main>
-</div>
-</div>
+        </div>
 
-<!-- Page de détail (exemple statique, à afficher dynamiquement) -->
-<div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="detailModal">
-<div class="bg-white p-6 rounded-2xl max-w-xl w-full">
- <h2 class="text-xl font-bold mb-4">Détail de l'Article</h2>
- <p><span class="font-semibold">Titre:</span> Article Exemple</p>
- <p><span class="font-semibold">Auteur:</span> Jean Dupont</p>
- <p><span class="font-semibold">Date:</span> 2025-04-17</p>
- <p class="mt-2"><span class="font-semibold">Contenu:</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
- <button onclick="document.getElementById('detailModal').classList.add('hidden')" class="mt-4 bg-gray-800 text-white px-4 py-2 rounded">Fermer</button>
-</div>
- 
- 
- <%- include('../includes/end') %>
+        <!-- Page de détail (exemple statique, à afficher dynamiquement) -->
+        <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="detailModal">
+            <div class="bg-white p-6 rounded-2xl max-w-xl w-full">
+                <h2 class="text-xl font-bold mb-4">Détail de l'Article</h2>
+                <p><span class="font-semibold">Titre:</span> Article Exemple</p>
+                <p><span class="font-semibold">Auteur:</span> Jean Dupont</p>
+                <p><span class="font-semibold">Date:</span> 2025-04-17</p>
+                <p class="mt-2"><span class="font-semibold">Contenu:</span> Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit.</p>
+                <button onclick="document.getElementById('detailModal').classList.add('hidden')"
+                    class="mt-4 bg-gray-800 text-white px-4 py-2 rounded">Fermer</button>
+            </div>
+
+
+            <%- include('../includes/end') %>

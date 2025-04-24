@@ -29,7 +29,8 @@ router.post('/categories/edit', [
 		.notEmpty()
 		.isLength({min: 3, max: 20}).withMessage('Le nombre de caracteres doit etre entre 3 et 20'),
 	body('slug').isString().trim().notEmpty(),
-],categoryController.postAddCategory);
+	body('categoryId').trim().notEmpty(),
+],categoryController.postEditCategory);
 
 
 module.exports = router;

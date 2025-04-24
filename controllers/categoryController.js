@@ -5,6 +5,7 @@ exports.getCategory = (req, res, next) => {
     Category.findAll()
         .then(categories => {
             res.render('category/index', {
+                path: '/categories',
                 pageTitle: 'Liste de categories',
                 categories: categories
             });
@@ -16,6 +17,7 @@ exports.getCategory = (req, res, next) => {
 
 exports.getAddCategory = (req, res, next) => {
     res.render('category/add-update', {
+        path: '/categories',
         editing: false,
         errorsMessage: []
     });
@@ -26,13 +28,16 @@ exports.getEditCategory = (req, res, next) => {
     Category.findOne({ where: { id: categorieId } })
         .then(category => {
             res.render('category/add-update', {
+                path: '/categories',
                 editing: true,
                 category: category,
                 errorsMessage: []
             });
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -40,6 +45,7 @@ exports.postAddCategory = (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(422).render('category/add-update', {
+            path: '/categories',
             pageTitle: "Ajouter une Category",
             editing: false,
             hasError: true,
@@ -64,6 +70,7 @@ exports.postEditCategory = (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(422).render('category/add-update', {
+            path: '/categories',
             pageTitle: "Ajouter une Category",
             editing: false,
             hasError: true,
@@ -75,6 +82,7 @@ exports.postEditCategory = (req, res, next) => {
 
     Category.findOne({ where: { id: data.categoryId } })
         .then(category => {
+            console.log(category);
             category.title = data.title;
             category.slug = data.slug;
             return category.save();
@@ -83,5 +91,9 @@ exports.postEditCategory = (req, res, next) => {
             req.flash('message', 'Category Modifier');
             res.redirect('/admin/categories')
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 }

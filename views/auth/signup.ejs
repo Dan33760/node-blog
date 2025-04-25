@@ -5,6 +5,7 @@
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
             <h2 class="text-xl font-bold mb-4 text-center">Créer un compte</h2>
             <form class="space-y-4" action="/auth/signup" method="post">
+                <input type="hidden" readonly name="_csrf" value="<%= csrfToken %>">
                 <div>
                     <label for="name" class="text-sm font-semibold text-black-500 mt-1">Nom</label>
                     <input type="text" name="name" value="<%= oldUser.name %>"

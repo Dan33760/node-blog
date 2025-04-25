@@ -46,8 +46,6 @@ exports.postLogin = (req, res, next) => {
                 })
             }
 
-            console.log(formData)
-
             bcrypt.compare(formData.password, user.password)
                 .then(passwordMatch => {
                     if(passwordMatch) {
@@ -57,10 +55,9 @@ exports.postLogin = (req, res, next) => {
                         
                         return req.session.save(err => {
                             if(err) {
-                                console.log(err);
                                 next(err)
                             }
-                            res.redirect('/admin/')
+                            res.redirect('/dashboard')
                         })
                     }
                     return res.status(422).render('auth/login', {
@@ -123,7 +120,6 @@ exports.postSignup = (req, res, next) => {
             res.redirect('/login');
         })
         .catch(err => {
-            console.log(err);
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);

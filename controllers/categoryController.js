@@ -1,7 +1,7 @@
 const { validationResult, matchedData } = require('express-validator');
 const { Category } = require('../models');
 
-exports.getCategory = (req, res, next) => {
+exports.getCategories = (req, res, next) => {
     Category.findAll()
         .then(categories => {
             res.render('category/index', {
@@ -61,7 +61,7 @@ exports.postAddCategory = (req, res, next) => {
         })
         .then((result) => {
             req.flash('message', 'Category bien enregistrer');
-            res.redirect('/admin/categories')
+            res.redirect('/categories')
         })
         .catch(err => console.log(err));
 }
@@ -89,7 +89,7 @@ exports.postEditCategory = (req, res, next) => {
         })
         .then((result) => {
             req.flash('message', 'Category Modifier');
-            res.redirect('/admin/categories')
+            res.redirect('/categories')
         })
         .catch(err => {
             const error = new Error(err);
@@ -111,7 +111,7 @@ exports.deleteCatgory = (req, res, next) => {
         .then(result => {
             console.log(result);
             req.flash('message', 'Category Supprime');
-            res.redirect('/admin/categories')
+            res.redirect('/categories')
         })
         .catch(err => {
             const error = new Error(err);

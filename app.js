@@ -8,16 +8,28 @@ const flash = require('connect-flash');
 const Tokens = require('csrf');
 
 
-const indexRouter = require('./routes/index');
+const dashboardRouter = require('./routes/dashboard');
 const usersRouter = require('./routes/users');
 const authsRouter = require('./routes/auth');
-const adminRoutes = require('./routes/admin');
+const categoryRouter = require('./routes/admin/category');
+const ArticleRouter = require('./routes/admin/article');
 const errorController = require('./controllers/errorController');
 
 const { isAuthenticated, isAlreadyAuthenticated, noCache, chechAuthAlready } = require('./middlewares/authentication')
 
 const app = express();
 const tokens = new Tokens();
+
+
+// Configuration de la session
+app.use(session({
+    secret: 'danielsivyolokasereka',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false
+    }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,13 +40,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configuration de la session
-app.use(session({
-    secret: 'danielsivyolokasereka',
-    resave: false,
-    saveUninitialized: false
-}));
 
 // Creer un csrf token
 app.use((req, res, next) => {
@@ -56,11 +61,17 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log(req.session.isLogedIn)
+    next();
+});
+
 // Configuration des routes
-app.use('/', indexRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authsRouter);
-app.use('/admin', isAuthenticated, adminRoutes);
+app.use('/categories', isAuthenticated, categoryRouter);
+app.use('/articles', ArticleRouter);
 
 // app.use('/500', errorController.get500);
 

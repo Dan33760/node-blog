@@ -4,9 +4,11 @@ const { body, check } = require('express-validator');
 const authController = require('../controllers/authController');
 const { User } = require('../models');
 
+const { chechAuthAlready } = require('../middlewares/authentication');
+
 const router = express.Router();
 
-router.get('/login', authController.getLogin);
+router.get('/login', chechAuthAlready, authController.getLogin);
 
 router.post('/login', [
     body('email').isEmail(),
@@ -29,5 +31,7 @@ router.post('/signup', [
         .normalizeEmail(),
     body('password').notEmpty()
 ],authController.postSignup);
+
+router.get('/logout', authController.logout);
 
 module.exports = router;

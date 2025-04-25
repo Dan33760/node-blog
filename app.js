@@ -13,6 +13,8 @@ const authsRouter = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const errorController = require('./controllers/errorController');
 
+const { isAuthenticated, isAlreadyAuthenticated, noCache, chechAuthAlready } = require('./middlewares/authentication')
+
 const app = express();
 
 // view engine setup
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authsRouter);
-app.use('/admin', adminRoutes);
+app.use('/admin', isAuthenticated, adminRoutes);
 
 // app.use('/500', errorController.get500);
 

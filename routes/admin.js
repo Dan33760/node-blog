@@ -4,8 +4,10 @@ const { body } = require('express-validator');
  
 const categoryController = require('../controllers/categoryController');
 
+const { isAuthenticated, isAlreadyAuthenticated, noCache, chechAuthAlready } = require('../middlewares/authentication');
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', noCache, function(req, res, next) {
   res.render('index', {
 	path: '/dashboard'
   });

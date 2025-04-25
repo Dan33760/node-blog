@@ -46,10 +46,22 @@ exports.postLogin = (req, res, next) => {
                 })
             }
 
+            console.log(formData)
+
             bcrypt.compare(formData.password, user.password)
                 .then(passwordMatch => {
                     if(passwordMatch) {
-                        return res.redirect('/admin/')
+                        // return res.redirect('/admin/')
+                        req.session.user = user;
+                        req.session.isLogedIn = true;
+                        
+                        return req.session.save(err => {
+                            if(err) {
+                                console.log(err);
+                                next(err)
+                            }
+                            res.redirect('/admin/')
+                        })
                     }
                     return res.status(422).render('auth/login', {
                         pageTitle: 'Signup',
@@ -117,4 +129,18 @@ exports.postSignup = (req, res, next) => {
             return next(error);
         })
 
+}
+
+exports.logout = (req, res, next) => {
+    req.session.user = null;
+    req.session.isLogedIn = null;
+
+    req.session.save(err => {
+        if(err) next(err)
+        
+        req.session.regenerate(err => {
+            if (err) next(err);
+            res.redirect('/auth/login');
+        })
+    })
 }

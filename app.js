@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
+const Tokens = require('csrf');
 
 
 const indexRouter = require('./routes/index');
@@ -16,6 +17,7 @@ const errorController = require('./controllers/errorController');
 const { isAuthenticated, isAlreadyAuthenticated, noCache, chechAuthAlready } = require('./middlewares/authentication')
 
 const app = express();
+const tokens = new Tokens();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,12 +36,23 @@ app.use(session({
     saveUninitialized: false
 }));
 
+// Creer un csrf token
+app.use((req, res, next) => {
+    if(!req.session.csrfToken) {
+        req.session.csrfToken = tokens.secretSync();
+    }
+
+    req.csrfToken = () => tokens.create(req.session.csrfToken);
+    next();
+})
+
 // configuration connect-flash
 app.use(flash());
 
 // Middleware pour mettre le message flash dans les variables de la vue
 app.use((req, res, next) => {
     res.locals.message = req.flash('message');
+    res.locals.csrfToken = req.csrfToken();
     next();
 });
 

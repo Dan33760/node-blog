@@ -9,7 +9,7 @@
                 </p>
                 <% } %>
             <form class="space-y-4" action="/auth/login" method="POST">
-                
+                <input type="hidden" readonly name="_csrf" value="<%= csrfToken %>">
                 <div>
                     <label for="emaol" class="text-sm font-semibold text-black-500 mt-1">Email</label>
                     <input type="email" name="email" value="<%= oldUser.email %>"

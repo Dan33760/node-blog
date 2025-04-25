@@ -6,11 +6,13 @@ const { User } = require('../models');
 
 const { chechAuthAlready } = require('../middlewares/authentication');
 
+const verifyCsrfToken = require('../middlewares/verify-csrftoken');
+
 const router = express.Router();
 
 router.get('/login', chechAuthAlready, authController.getLogin);
 
-router.post('/login', [
+router.post('/login', verifyCsrfToken,[
     body('email').isEmail(),
     body('password').notEmpty()
 ],authController.postLogin);

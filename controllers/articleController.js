@@ -22,6 +22,7 @@ exports.getAddArticle = (req, res, next) => {
                 path: '/articles',
                 categories: categories,
                 editing: false,
+                errorMessage: null,
                 errorsMessage: []
             });
         })
@@ -40,6 +41,7 @@ exports.getEditArticle = (req, res, next) => {
                 path: '/articles',
                 editing: true,
                 category: category,
+                errorMessage: null,
                 errorsMessage: []
             });
         })
@@ -51,6 +53,7 @@ exports.getEditArticle = (req, res, next) => {
 }
 
 exports.postAddarticle = (req, res, next) => {
+
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         Category.findAll()
@@ -71,12 +74,35 @@ exports.postAddarticle = (req, res, next) => {
             })
     }
 
+    const image = req.file;
+
+    if(!image) {
+        Category.findAll()
+            .then(categories => {
+                return res.status(422).render('article/add', {
+                    path: '/articles',
+                    pageTitle: "Ajouter un Article",
+                    categories: categories,
+                    editing: false,
+                    hasError: true,
+                    errorMessage: 'Image incorect',
+                    errorsMessage: errors.array()
+                })
+            })
+            .catch(err => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+            })
+    }
+
     const formData = matchedData(req);
     console.log(formData);
 
     Article.create({
             title: formData.title,
             slug: formData.slug,
+            thumbnail: image.path,
             content: formData.content
         })
         .then(article => {
@@ -101,16 +127,6 @@ exports.postAddarticle = (req, res, next) => {
                     return next(error);
                 })
         })
-
-    // Category.create({
-    //         title: data.title,
-    //         slug: data.slug,
-    //     })
-    //     .then((result) => {
-    //         req.flash('message', 'Category bien enregistrer');
-    //         res.redirect('/admin/articles')
-    //     })
-    //     .catch(err => console.log(err));
 }
 
 exports.postEditArticle = (req, res, next) => {

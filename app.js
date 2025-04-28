@@ -6,6 +6,7 @@ const logger = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
 const Tokens = require('csrf');
+const multer = require('multer');
 
 
 const dashboardRouter = require('./routes/dashboard');
@@ -35,11 +36,36 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSufix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSufix);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if(
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
+        cb(null, true);
+    }
+    else {
+        cb(null, false);
+    }
+}
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(multer({ storage: storage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public/images', express.static(path.join(__dirname, 'public/images')));
 
 // Creer un csrf token
 app.use((req, res, next) => {

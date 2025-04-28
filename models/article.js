@@ -58,7 +58,7 @@ module.exports = (sequelize) => {
         },
         slug: DataTypes.STRING,
         content: DataTypes.TEXT,
-        thumnail: DataTypes.STRING,
+        thumbnail: DataTypes.STRING,
         is_published: {
             type: DataTypes.BOOLEAN,
             default: false

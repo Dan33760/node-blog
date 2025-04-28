@@ -14,6 +14,7 @@
                     <section class="bg-white p-6 rounded-2xl shadow">
                         <h2 class="text-lg font-semibold mb-4">Ajouter Un article</h2>
                         <form action="/articles/add" method="POST"
+                            enctype="multipart/form-data"
                             class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
                             <input type="hidden" readonly name="_csrf" value="<%= csrfToken %>">
                             <div class="md:col-span-1">
@@ -50,6 +51,16 @@
                                     </p>
                                     <% } %>
                             </div>
+
+                            <div class="md:col-span-1">
+                                <p class="text-sm font-semibold text-black-500 mt-1">Image</p>
+                                <input type="file" name="image" class="w-full text-sm" />
+                                <% if(errorMessage) { %>
+                                    <p class="text-xs text-red-500 mt-1">
+                                        <%= errorMessage %>
+                                    </p>
+                                    <% } %>
+                              </div>
 
                             <div class="md:col-span-1">
                                 <p class="text-sm font-semibold text-black-500 mt-1">Contenu</p>

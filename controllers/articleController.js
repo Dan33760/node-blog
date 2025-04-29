@@ -1,5 +1,6 @@
 const { validationResult, matchedData } = require('express-validator');
 const { Category, Article, ArticleCategory } = require('../models');
+const { where } = require('sequelize');
 
 exports.getArticles = (req, res, next) => {
     Article.findAll()
@@ -207,7 +208,7 @@ exports.postEditArticle = (req, res, next) => {
             return ArticleCategory.bulkCreate(articleCategories);
         })
         .then(result => {
-            req.flash('message', 'Article bien enregistrer');
+            req.flash('message', 'Article modifier');
             res.redirect('/articles')
         })
         .catch(err => {
@@ -219,23 +220,25 @@ exports.postEditArticle = (req, res, next) => {
 
 
 
-exports.deleteCatgory = (req, res, next) => {
-    const categorieId = req.params.categoryId;
-    Category.findByPk(categorieId)
-        .then(category => {
-            if(!category) {
-                let err = new Error('Category non trouver');
-                return next(err);
+exports.deleteArticle = (req, res, next) => {
+    const articleId = req.params.articleId;
+
+    Article.findByPk(articleId)
+        .then(article => {
+            if(!article) {
+                return next(new Error('article non trouve'));
             }
-            return category.destroy();
+
+            return ArticleCategory.destroy({ where: { article_id: articleId } })
+                .then(() => article.destroy());
         })
-        .then(result => {
-            req.flash('message', 'Category Supprime');
-            res.redirect('/admin/articles')
+        .then(() => {
+            req.flash('message', 'Article supprimé avec succès');
+            res.redirect('/articles')
         })
         .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
-        })
+        });
 }

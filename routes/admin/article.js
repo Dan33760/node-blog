@@ -62,6 +62,8 @@ router.post('/edit/:articleId',
 
 router.get('/edit/:articleId', articleController.getEditArticle);
 
+router.get('/delete/:articleId', articleController.deleteArticle);
+
 
 
 module.exports = router;

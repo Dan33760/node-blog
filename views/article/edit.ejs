@@ -12,11 +12,12 @@
 
                     <!-- Formulaire -->
                     <section class="bg-white p-6 rounded-2xl shadow">
-                        <h2 class="text-lg font-semibold mb-4">Ajouter Un article</h2>
-                        <form action="/articles/add" method="POST"
+                        <h2 class="text-lg font-semibold mb-4">Modifier Un article</h2>
+                        <form action="/articles/edit" method="POST"
                             enctype="multipart/form-data"
                             class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
                             <input type="hidden" readonly name="_csrf" value="<%= csrfToken %>">
+                            <input type="hidden" readonly name="articleId" value="<%= article.id %>">
                             <div class="md:col-span-1">
                                 <p class="text-sm font-semibold text-black-500 mt-1">Titre</p>
                                 <input type="text" name="title" value="<%= article.title %>"
@@ -42,7 +43,11 @@
                                 <p class="text-sm font-semibold text-black-500 mt-1">Catégorie</p>
                                 <select name="categories" class="border px-2 py-1 text-sm rounded w-full" multiple>
                                     <% for(let category of categories) { %>
-                                    <option value="<%= category.id %>"><%= category.title %></option>
+                                        <% for(let artCategory of article.categories) { %>
+                                            <option
+                                                <% if(category.id === artCategory.id) { %> selected <% } %>
+                                                value="<%= category.id %>"><%= category.title %></option>
+                                        <% } %>
                                     <% } %>
                                 </select>
                                 <% if(errorsMessage.find(e=> e.path === 'categories')) { %>
@@ -65,7 +70,7 @@
                             <div class="md:col-span-1">
                                 <p class="text-sm font-semibold text-black-500 mt-1">Contenu</p>
                                 <textarea name="content"
-                                    class="border px-2 py-1 text-sm rounded w-full h-24"><%= article.slug %></textarea>
+                                    class="border px-2 py-1 text-sm rounded w-full h-24"><%= article.content %></textarea>
                                 <% if(errorsMessage.find(e=> e.path === 'content')) { %>
                                     <p class="text-xs text-red-500 mt-1">
                                         <%= errorsMessage.find(e=> e.path === 'content').msg %>

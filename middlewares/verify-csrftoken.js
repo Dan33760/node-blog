@@ -8,7 +8,7 @@ const verifyCsrfToken = (req, res, next) => {
     if(!secret || !token || !tokens.verify(secret, token)) {
         return next('CSRF token invalide ou manquant.');
     }
-
+    
     next();
 }
 

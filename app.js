@@ -6,7 +6,6 @@ const logger = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
 const Tokens = require('csrf');
-const multer = require('multer');
 
 
 const dashboardRouter = require('./routes/dashboard');
@@ -36,34 +35,11 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/images');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSufix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSufix);
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    if(
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/jpeg'
-    ) {
-        cb(null, true);
-    }
-    else {
-        cb(null, false);
-    }
-}
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(multer({ storage: storage, fileFilter: fileFilter }).single('image'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/public/images', express.static(path.join(__dirname, 'public/images')));
 
@@ -88,7 +64,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    console.log(req.session.isLogedIn)
+    // console.log(req.session.isLogedIn)
     next();
 });
 
@@ -111,7 +87,7 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render('500', {
-        pageTitle: '500'
+        pageTitle: '500',
     });
 });
 

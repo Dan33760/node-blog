@@ -10,6 +10,7 @@ const { noCache } = require('../../middlewares/authentication');
 
 const verifyCsrfToken = require('../../middlewares/verify-csrftoken');
 const multerErrorHandler = require('../../middlewares/multer-error-handler');
+const multerImageArticleUpdate = require('../../middlewares/multer-image-article-update');
 
 router.get('/', articleController.getArticles);
 
@@ -36,7 +37,10 @@ router.post('/add',
     articleController.postAddArticle
 );
 
-router.post('/edit/:articleId', verifyCsrfToken,
+router.post('/edit/:articleId',
+    upload.single('image'),
+    multerImageArticleUpdate,
+    verifyCsrfToken,
     (req, res, next) => {
         if(req.body.categories && typeof req.body.categories == 'string') {
             req.body.categories = [req.body.categories];

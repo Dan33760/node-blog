@@ -11,7 +11,9 @@ exports.getArticles = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 }  
 
@@ -44,7 +46,6 @@ exports.getEditArticle = (req, res, next) => {
         .then(categories => {
             return Article.findByPk(articleId, { include: ['categories'] })
                 .then(article => {
-                    console.log(article.categories)
                     res.render('article/edit', {
                         path: '/articles',
                         editing: true,
@@ -150,22 +151,31 @@ exports.postAddArticle = (req, res, next) => {
 exports.postEditArticle = (req, res, next) => {
     const errors = validationResult(req);
     const articleId = req.params.articleId;
+    const image = req.file;
+    const formData = matchedData(req);
+
+
 
     if(!errors.isEmpty()) {
-        Category.findAll()
-            .then(categories => {
-                return Article.findByPk(articleId, { include: ['categories'] })
-                    .then(article => {
-                        console.log(article.categories)
-                        res.render('article/edit', {
-                            path: '/articles',
-                            editing: true,
-                            categories: categories,
-                            article: article,
-                            errorMessage: null,
-                            errorsMessage: []
-                        });
-                    });
+        return Promise.all([
+                Category.findAll(),
+                Article.findByPk(articleId, { include: ['categories'] })
+            ])
+            .then(([categories, article]) => {
+                return res.render('article/edit', {
+                    path: '/articles',
+                    editing: true,
+                    categories: categories,
+                    article: {
+                        id: article.id,
+                        categories: article.categories,
+                        title: req.body.title ?? '',
+                        slug: req.body.slug ?? '',
+                        content: req.body.content ?? ''
+                    },
+                    errorMessage: 'Corriger les erreurs',
+                    errorsMessage: errors.array()
+                });
             })
             .catch(err => {
                 const error = new Error(err);
@@ -174,62 +184,37 @@ exports.postEditArticle = (req, res, next) => {
             })
     }
 
-    const image = req.file;
-
-    if(!image) {
-        Category.findAll()
-            .then(categories => {
-                return Article.findByPk(articleId, { include: ['categories'] })
-                    .then(article => {
-                        console.log(article.categories)
-                        res.render('article/edit', {
-                            path: '/articles',
-                            editing: true,
-                            categories: categories,
-                            article: article,
-                            errorMessage: null,
-                            errorsMessage: []
-                        });
-                    });
-            })
-            .catch(err => {
-                const error = new Error(err);
-                error.httpStatusCode = 500;
-                return next(error);
-            })
-    }
-
-    const formData = matchedData(req);
-    console.log(formData);
-
-    Article.create({
-            title: formData.title,
-            slug: formData.slug,
-            thumbnail: image.path,
-            content: formData.content
+    Article.findByPk(articleId, { include: ['categories'] })
+        .then(article => {
+            article.title = formData.title;
+            article.slug = formData.slug;
+            article.content = formData.content;
+            article.thumbnail = image?.path ?? article.thumbnail;
+            return article.save();
         })
         .then(article => {
-            let articleCategories = [];
-            for(let categorieId of formData.categories) {
-                let articleCategorie  = {
-                    article_id: article.id,
-                    category_id: categorieId
-                }
-                articleCategories.push(articleCategorie);
-            }
-            console.log(articleCategories);
-
-            ArticleCategory.bulkCreate(articleCategories)
-                .then(result => {
-                    req.flash('message', 'Article bien enregistrer');
-                    res.redirect('/articles')
-                })
-                .catch(err => {
-                    const error = new Error(err);
-                    error.httpStatusCode = 500;
-                    return next(error);
-                })
+            return ArticleCategory.destroy({ where: { article_id: articleId } })
         })
+        .then(result => {
+            let articleCategories = [];
+            for(let categoryId of formData.categories) {
+                let newArtCategory = {
+                    article_id: articleId,
+                    category_id: categoryId
+                }
+                articleCategories.push(newArtCategory);
+            }
+            return ArticleCategory.bulkCreate(articleCategories);
+        })
+        .then(result => {
+            req.flash('message', 'Article bien enregistrer');
+            res.redirect('/articles')
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 }
 
 
@@ -245,7 +230,6 @@ exports.deleteCatgory = (req, res, next) => {
             return category.destroy();
         })
         .then(result => {
-            console.log(result);
             req.flash('message', 'Category Supprime');
             res.redirect('/admin/articles')
         })

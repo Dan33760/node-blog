@@ -13,7 +13,12 @@
                     <!-- Formulaire -->
                     <section class="bg-white p-6 rounded-2xl shadow">
                         <h2 class="text-lg font-semibold mb-4">Modifier Un article</h2>
-                        <form action="/articles/edit" method="POST"
+                        <% if(errorMessage) { %>
+                            <p class="text-sm font-bold text-red-500 mt-1">
+                                <%= errorMessage %>
+                            </p>
+                            <% } %>
+                        <form action="/articles/edit/<%= article.id %>" method="POST"
                             enctype="multipart/form-data"
                             class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full md:w-1/2">
                             <input type="hidden" readonly name="_csrf" value="<%= csrfToken %>">
@@ -43,11 +48,12 @@
                                 <p class="text-sm font-semibold text-black-500 mt-1">Catégorie</p>
                                 <select name="categories" class="border px-2 py-1 text-sm rounded w-full" multiple>
                                     <% for(let category of categories) { %>
-                                        <% for(let artCategory of article.categories) { %>
+                                        <%
+                                            let isSelected = article.categories.some(artCategory => artCategory.id === category.id) 
+                                        %>
                                             <option
-                                                <% if(category.id === artCategory.id) { %> selected <% } %>
+                                                <% if(isSelected) { %> selected <% } %>
                                                 value="<%= category.id %>"><%= category.title %></option>
-                                        <% } %>
                                     <% } %>
                                 </select>
                                 <% if(errorsMessage.find(e=> e.path === 'categories')) { %>

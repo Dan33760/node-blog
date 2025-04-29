@@ -3,6 +3,7 @@ const { Category } = require('../models');
 
 function multerErrorHandler(err, req, res, next) {
     if(err instanceof multer.MulterError || err instanceof Error) {
+        
         const errorMessage = err.message || 'Erreur lors de l\'upload du fichier';
 
         Category.findAll()
